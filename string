@@ -1,0 +1,43 @@
+from itertools import combinations
+
+def read_fasta(filepath):
+    sequences = {}
+    with open(filepath, 'r') as file:
+        name = ""
+        seq = ""
+        for line in file:
+            line = line.strip()
+            if line.startswith(">"):
+                if name:
+                    sequences[name] = seq
+                name = line[1:]
+                seq = ""
+            else:
+                seq += line
+        if name:
+            sequences[name] = seq
+    return sequences
+
+def most_similar_pair(sequences):
+    names = list(sequences.keys())
+    min_diff = None
+    closest_pair = ()
+
+    for name1, name2 in combinations(names, 2):
+        seq1 = sequences[name1]
+        seq2 = sequences[name2]
+        diff = sum(a != b for a, b in zip(seq1, seq2))
+        
+        if min_diff is None or diff < min_diff:
+            min_diff = diff
+            closest_pair = (name1, name2)
+
+    print(f"Most similar pair: {closest_pair[0]} and {closest_pair[1]}")
+    print(f"Amino acid differences: {min_diff}")
+
+
+if __name__ == "__main__":
+    fasta_file = "whale.fasta"
+    sequences = read_fasta(fasta_file)
+    most_similar_pair(sequences)
+	
