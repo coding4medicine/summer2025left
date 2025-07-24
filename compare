@@ -1,0 +1,4 @@
+f=open('whale.aln')
+whale=f.readlines()
+whale=whale.rstrip('\n')
+print(whale)
